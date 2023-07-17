@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@logger": ["src/app/logger/index"],
+			"@config/*": ["src/config/*"],
+			"@api/*": ["src/api/*"],
+			"@app/*": ["src/app/*"]
+		},
+		"module": "commonjs",
+		"declaration": true,
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "es2017",
+		"sourceMap": true,
+		"outDir": "./dist",
+		"incremental": true,
+		"skipLibCheck": true,
+		"strictNullChecks": false,
+		"noImplicitAny": false,
+		"strictBindCallApply": false,
+		"forceConsistentCasingInFileNames": false,
+		"noFallthroughCasesInSwitch": false,
+		"strictFunctionTypes": true
+	}
+}
