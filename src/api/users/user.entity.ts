@@ -7,6 +7,7 @@ import {
 	JoinColumn,
 	OneToMany,
 	ManyToOne,
+	Column,
 } from 'typeorm'
 
 // decorators
@@ -45,6 +46,9 @@ export class User {
 	@JoinColumn()
 	@RefProperty({ nullable: true })
 	boss?: User
+
+	@Column({ nullable: true })
+	bossId?: number
 
 	@OneToMany(() => User, user => user.boss)
 	@JoinColumn()

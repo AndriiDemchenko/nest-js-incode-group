@@ -24,16 +24,45 @@ export class UsersService {
 		return this.usersRepository.save(createUserDto)
 	}
 
-	findAllBasedOnRole(user: JwtPayload): Promise<User[]> {
-		let where: any = {}
+	async findAllBasedOnRole(user: JwtPayload): Promise<User[]> {
+		const where: any = {}
 
 		switch (user.role) {
 			case UserRole.Admin: {
 				break
 			}
 			case UserRole.Boss: {
-				where = [{ id: user.id }, { boss: new User({ id: user.id }) }]
-				break
+				return this.usersRepository.query(`
+					WITH RECURSIVE subordinates AS (
+						SELECT
+							id,
+							username,
+							role,
+							status,
+							"user"."bossId",
+							"user"."createdAt",
+							"user"."updatedAt"
+						FROM
+							public.user
+						WHERE
+							id = ${user.id}
+						UNION
+							SELECT
+								e.id,
+								e.username,
+								e.role,
+								e.status,
+								"e"."bossId",
+								"e"."createdAt",
+								"e"."updatedAt"
+							FROM
+								public.user e
+							INNER JOIN subordinates s ON s.id = "e"."bossId"
+					) SELECT
+						*
+					FROM
+						subordinates;
+				`)
 			}
 			case UserRole.Subordinate: {
 				where.id = user.id
@@ -47,7 +76,6 @@ export class UsersService {
 		return this.usersRepository.find({
 			where,
 			order: { id: -1 },
-			relations: { boss: false, subordinates: true },
 		})
 	}
 
